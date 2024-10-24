@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Volleyball data tracker</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+  </head>
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700");
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: border-box;
+    }
+
+    body {
+      padding: 24px;
+      font-family: "Source Sans Pro", sans-serif;
+      margin: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin: 0;
+    }
+
+    button {
+      position: fixed;
+      cursor: pointer;
+      left: 50%;
+      transform: translateX(-50%);
+      border: none;
+      background-color: green;
+      color: white;
+      padding: 15px;
+      border-radius: 15px;
+      bottom: 10px;
+      margin-right: auto;
+      margin-left: auto;
+    }
+    button:hover {
+      box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+        rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+        rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin-right: auto;
+      margin-left: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .table {
+      width: 100%;
+      border: 1px solid #eeeeee;
+    }
+
+    .table-header {
+      display: flex;
+      width: 100%;
+      background: #000;
+      padding: 7px 0;
+    }
+
+    .table-row {
+      display: flex;
+      width: 100%;
+    }
+
+    .table-row:nth-of-type(odd) {
+      background: #eeeeee;
+    }
+
+    .table-data:first-child {
+      border-right: #000 solid 2px;
+    }
+    .table-data {
+      cursor: pointer;
+      padding: 7px 0;
+    }
+    .table-data:hover {
+      box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px,
+        rgba(6, 24, 44, 0.65) 0px 4px 6px -1px,
+        rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+    }
+    .default:hover {
+      box-shadow: none !important;
+    }
+    .default {
+      cursor: default !important;
+    }
+    .table-data,
+    .header__item {
+      flex: 1 1 20%;
+      text-align: center;
+    }
+
+    .header__item {
+      text-transform: uppercase;
+    }
+
+    .filter__link {
+      color: white;
+      text-decoration: none;
+      position: relative;
+      display: inline-block;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    .filter__link::after {
+      content: "";
+      position: absolute;
+      right: -18px;
+      color: white;
+      font-size: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .filter__link.desc::after {
+      content: "(desc)";
+    }
+
+    .filter__link.asc::after {
+      content: "(asc)";
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div class="table">
+        <div class="table-header">
+          <div class="header__item"></div>
+          <div class="header__item">
+            <a id="wins" class="filter__link filter__link--number" href="#"
+              >Réception</a
+            >
+          </div>
+          <div class="header__item"></div>
+          <div class="header__item"></div>
+          <div class="header__item"></div>
+        </div>
+        <div class="table-content reception">
+          <div class="table-row">
+            <div class="default table-data" style="border: none"></div>
+            <div class="default table-data">3</div>
+            <div class="default table-data">2</div>
+            <div class="default table-data">1</div>
+            <div class="default table-data">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="table">
+        <div class="table-header">
+          <div class="header__item"></div>
+          <div class="header__item">
+            <a id="wins" class="filter__link filter__link--number" href="#"
+              >Service</a
+            >
+          </div>
+          <div class="header__item"></div>
+          <div class="header__item"></div>
+          <div class="header__item"></div>
+          <div class="header__item">
+            <a id="wins" class="filter__link filter__link--number" href="#"
+              >Block</a
+            >
+          </div>
+          <div class="header__item"></div>
+        </div>
+        <div class="table-content service">
+          <div class="table-row">
+            <div class="default table-data" style="border: none"></div>
+            <div class="default table-data">3</div>
+            <div class="default table-data">2</div>
+            <div class="default table-data">1</div>
+            <div class="default table-data">0</div>
+            <div class="default table-data">Bloqué</div>
+            <div class="default table-data">Touché</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="table">
+        <div class="table-header">
+          <div class="header__item"></div>
+          <div class="header__item">
+            <a id="wins" class="filter__link filter__link--number" href="#"
+              >Attaque</a
+            >
+          </div>
+          <div class="header__item"></div>
+          <div class="header__item"></div>
+          <div class="header__item">
+            <a id="wins" class="filter__link filter__link--number" href="#"
+              >Défensive</a
+            >
+          </div>
+          <div class="header__item"></div>
+        </div>
+        <div class="table-content attack">
+          <div class="table-row">
+            <div class="default table-data" style="border: none"></div>
+            <div class="default table-data">Marquante</div>
+            <div class="default table-data">Jouée</div>
+            <div class="default table-data">Marquée</div>
+            <div class="default table-data">Relevé</div>
+            <div class="default table-data">Touché</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button onclick="exportTableToSheet()">Export to Sheet</button>
+  </body>
+  <script>
+    function exportTableToSheet() {
+      const tableContent = document.querySelectorAll(".table-row");
+      const data = [];
+
+      tableContent.forEach((row) => {
+        const rowData = [];
+        row.querySelectorAll(".table-data").forEach((cell) => {
+          rowData.push(cell.textContent);
+        });
+        data.push(rowData);
+      });
+
+      const ws = XLSX.utils.aoa_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+      XLSX.writeFile(wb, "table_data.xlsx");
+    }
+
+    const Players = [
+      "Clara",
+      "Mathilde F.",
+      "Julianne",
+      "Maëlle",
+      "Alex",
+      "Rosemary",
+      "Marilou",
+      "Claire",
+      "Mathilde H.",
+      "Rose-Émilie",
+    ];
+
+    let tableContent = document.querySelector(".reception");
+
+    Players.forEach((player) => {
+      const row = document.createElement("div");
+      row.className = "table-row";
+
+      const nameCell = document.createElement("div");
+      nameCell.className = "default table-data";
+      nameCell.innerHTML = `<strong>${player}</strong>`;
+      row.appendChild(nameCell);
+
+      for (let i = 0; i < 4; i++) {
+        const dataCell = document.createElement("div");
+        dataCell.className = "table-data";
+
+        dataCell.textContent = "0";
+        row.appendChild(dataCell);
+      }
+
+      tableContent.appendChild(row);
+    });
+
+    tableContent = document.querySelector(".service");
+
+    Players.forEach((player) => {
+      const row = document.createElement("div");
+      row.className = "table-row";
+
+      const nameCell = document.createElement("div");
+      nameCell.className = "default table-data";
+      nameCell.innerHTML = `<strong>${player}</strong>`;
+      row.appendChild(nameCell);
+
+      for (let i = 0; i < 6; i++) {
+        const dataCell = document.createElement("div");
+        dataCell.className = "table-data";
+        dataCell.textContent = "0";
+        row.appendChild(dataCell);
+      }
+
+      tableContent.appendChild(row);
+    });
+
+    tableContent = document.querySelector(".attack");
+
+    Players.forEach((player) => {
+      const row = document.createElement("div");
+      row.className = "table-row";
+
+      const nameCell = document.createElement("div");
+      nameCell.className = "default table-data";
+      nameCell.innerHTML = `<strong>${player}</strong>`;
+      row.appendChild(nameCell);
+
+      for (let i = 0; i < 5; i++) {
+        const dataCell = document.createElement("div");
+        dataCell.className = "table-data";
+        dataCell.textContent = "0";
+        row.appendChild(dataCell);
+      }
+
+      tableContent.appendChild(row);
+    });
+
+    document.querySelectorAll(".table-data:not(.default)").forEach((item) => {
+      item.addEventListener("click", (event) => {
+        if (event.altKey) {
+          item.innerHTML = Math.max(0, parseInt(item.innerHTML) - 1); // Ensures the value doesn't go below 0
+        } else {
+          item.innerHTML = parseInt(item.innerHTML) + 1;
+        }
+      });
+    });
+  </script>
+</html>
