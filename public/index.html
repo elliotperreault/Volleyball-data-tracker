@@ -167,6 +167,36 @@
           <div class="header__item"></div>
           <div class="header__item">
             <a id="wins" class="filter__link filter__link--number" href="#"
+              >Attaque</a
+            >
+          </div>
+          <div class="header__item"></div>
+          <div class="header__item"></div>
+          <div class="header__item">
+            <a id="wins" class="filter__link filter__link--number" href="#"
+              >Défensive</a
+            >
+          </div>
+          <div class="header__item"></div>
+        </div>
+        <div class="table-content attack">
+          <div class="table-row">
+            <div class="default table-data" style="border: none"></div>
+            <div class="default table-data">Marquante</div>
+            <div class="default table-data">Jouée</div>
+            <div class="default table-data">Marquée</div>
+            <div class="default table-data">Relevé</div>
+            <div class="default table-data">Touché</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="table">
+        <div class="table-header">
+          <div class="header__item"></div>
+          <div class="header__item">
+            <a id="wins" class="filter__link filter__link--number" href="#"
               >Service</a
             >
           </div>
@@ -188,36 +218,6 @@
             <div class="default table-data">1</div>
             <div class="default table-data">0</div>
             <div class="default table-data">Bloqué</div>
-            <div class="default table-data">Touché</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container">
-      <div class="table">
-        <div class="table-header">
-          <div class="header__item"></div>
-          <div class="header__item">
-            <a id="wins" class="filter__link filter__link--number" href="#"
-              >Attaque</a
-            >
-          </div>
-          <div class="header__item"></div>
-          <div class="header__item"></div>
-          <div class="header__item">
-            <a id="wins" class="filter__link filter__link--number" href="#"
-              >Défensive</a
-            >
-          </div>
-          <div class="header__item"></div>
-        </div>
-        <div class="table-content attack">
-          <div class="table-row">
-            <div class="default table-data" style="border: none"></div>
-            <div class="default table-data">Marquante</div>
-            <div class="default table-data">Jouée</div>
-            <div class="default table-data">Marquée</div>
-            <div class="default table-data">Relevé</div>
             <div class="default table-data">Touché</div>
           </div>
         </div>
@@ -273,7 +273,7 @@
         const dataCell = document.createElement("div");
         dataCell.className = "table-data";
 
-        dataCell.textContent = "0";
+        dataCell.textContent = "";
         row.appendChild(dataCell);
       }
 
@@ -294,7 +294,7 @@
       for (let i = 0; i < 6; i++) {
         const dataCell = document.createElement("div");
         dataCell.className = "table-data";
-        dataCell.textContent = "0";
+        dataCell.textContent = "";
         row.appendChild(dataCell);
       }
 
@@ -315,7 +315,7 @@
       for (let i = 0; i < 5; i++) {
         const dataCell = document.createElement("div");
         dataCell.className = "table-data";
-        dataCell.textContent = "0";
+        dataCell.textContent = "";
         row.appendChild(dataCell);
       }
 
@@ -325,9 +325,19 @@
     document.querySelectorAll(".table-data:not(.default)").forEach((item) => {
       item.addEventListener("click", (event) => {
         if (event.altKey) {
-          item.innerHTML = Math.max(0, parseInt(item.innerHTML) - 1); // Ensures the value doesn't go below 0
+          nextDataToShowInCell = Math.max(0, parseInt(item.innerHTML) - 1);
+          if (nextDataToShowInCell) {
+            item.innerHTML = nextDataToShowInCell;
+          } else {
+            item.innerHTML = nextDataToShowInCell = "";
+          }
         } else {
-          item.innerHTML = parseInt(item.innerHTML) + 1;
+          nextDataToShowInCell = parseInt(item.innerHTML) + 1;
+          if (nextDataToShowInCell) {
+            item.innerHTML = nextDataToShowInCell;
+          } else {
+            item.innerHTML = nextDataToShowInCell = 1;
+          }
         }
       });
     });
