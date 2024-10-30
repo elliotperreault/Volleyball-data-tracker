@@ -226,16 +226,35 @@
     <button onclick="exportTableToSheet()">Export to Sheet</button>
   </body>
   <script>
-    function exportTableToSheet() {
-      const tableContent = document.querySelectorAll(".table-row");
+        function exportTableToSheet() {
+      const tableSections = document.querySelectorAll(".table-content");
       const data = [];
 
-      tableContent.forEach((row) => {
-        const rowData = [];
-        row.querySelectorAll(".table-data").forEach((cell) => {
-          rowData.push(cell.textContent);
+      tableSections.forEach((section) => {
+        // Add section title based on class name
+        let sectionTitle = "";
+        if (section.classList.contains("reception")) {
+          sectionTitle = "Réception";
+        } else if (section.classList.contains("attack")) {
+          sectionTitle = "Attaque/Défensive";
+        } else if (section.classList.contains("service")) {
+          sectionTitle = "Service/Block";
+        }
+        data.push([{ v: sectionTitle, s: { font: { bold: true, color: { rgb: "FFFFFF" } }, fill: { fgColor: { rgb: "000000" } } } }]);
+
+
+        // Add table data
+        const rows = section.querySelectorAll(".table-row");
+        rows.forEach((row) => {
+          const rowData = [];
+          row.querySelectorAll(".table-data").forEach((cell) => {
+            rowData.push(cell.textContent);
+          });
+          data.push(rowData);
         });
-        data.push(rowData);
+
+        // Add an empty row for separation
+        data.push([]);
       });
 
       const ws = XLSX.utils.aoa_to_sheet(data);
@@ -245,101 +264,101 @@
       XLSX.writeFile(wb, "table_data.xlsx");
     }
 
-    const Players = [
-      "Clara",
-      "Mathilde F.",
-      "Julianne",
-      "Maëlle",
-      "Alex",
-      "Rosemary",
-      "Marilou",
-      "Claire",
-      "Mathilde H.",
-      "Rose-Émilie",
-    ];
+        const Players = [
+          "Clara",
+          "Mathilde F.",
+          "Julianne",
+          "Maëlle",
+          "Alex",
+          "Rosemary",
+          "Marilou",
+          "Claire",
+          "Mathilde H.",
+          "Rose-Émilie",
+        ];
 
-    let tableContent = document.querySelector(".reception");
+        let tableContent = document.querySelector(".reception");
 
-    Players.forEach((player) => {
-      const row = document.createElement("div");
-      row.className = "table-row";
+        Players.forEach((player) => {
+          const row = document.createElement("div");
+          row.className = "table-row";
 
-      const nameCell = document.createElement("div");
-      nameCell.className = "default table-data";
-      nameCell.innerHTML = `<strong>${player}</strong>`;
-      row.appendChild(nameCell);
+          const nameCell = document.createElement("div");
+          nameCell.className = "default table-data";
+          nameCell.innerHTML = `<strong>${player}</strong>`;
+          row.appendChild(nameCell);
 
-      for (let i = 0; i < 4; i++) {
-        const dataCell = document.createElement("div");
-        dataCell.className = "table-data";
+          for (let i = 0; i < 4; i++) {
+            const dataCell = document.createElement("div");
+            dataCell.className = "table-data";
 
-        dataCell.textContent = "";
-        row.appendChild(dataCell);
-      }
-
-      tableContent.appendChild(row);
-    });
-
-    tableContent = document.querySelector(".service");
-
-    Players.forEach((player) => {
-      const row = document.createElement("div");
-      row.className = "table-row";
-
-      const nameCell = document.createElement("div");
-      nameCell.className = "default table-data";
-      nameCell.innerHTML = `<strong>${player}</strong>`;
-      row.appendChild(nameCell);
-
-      for (let i = 0; i < 6; i++) {
-        const dataCell = document.createElement("div");
-        dataCell.className = "table-data";
-        dataCell.textContent = "";
-        row.appendChild(dataCell);
-      }
-
-      tableContent.appendChild(row);
-    });
-
-    tableContent = document.querySelector(".attack");
-
-    Players.forEach((player) => {
-      const row = document.createElement("div");
-      row.className = "table-row";
-
-      const nameCell = document.createElement("div");
-      nameCell.className = "default table-data";
-      nameCell.innerHTML = `<strong>${player}</strong>`;
-      row.appendChild(nameCell);
-
-      for (let i = 0; i < 5; i++) {
-        const dataCell = document.createElement("div");
-        dataCell.className = "table-data";
-        dataCell.textContent = "";
-        row.appendChild(dataCell);
-      }
-
-      tableContent.appendChild(row);
-    });
-
-    document.querySelectorAll(".table-data:not(.default)").forEach((item) => {
-      item.addEventListener("click", (event) => {
-        if (event.altKey) {
-          nextDataToShowInCell = Math.max(0, parseInt(item.innerHTML) - 1);
-          if (nextDataToShowInCell) {
-            item.innerHTML = nextDataToShowInCell;
-          } else {
-            item.innerHTML = nextDataToShowInCell = "";
+            dataCell.textContent = "";
+            row.appendChild(dataCell);
           }
-        } else {
-          nextDataToShowInCell = parseInt(item.innerHTML) + 1;
-          if (nextDataToShowInCell) {
-            item.innerHTML = nextDataToShowInCell;
-          } else {
-            item.innerHTML = nextDataToShowInCell = 1;
+
+          tableContent.appendChild(row);
+        });
+
+        tableContent = document.querySelector(".service");
+
+        Players.forEach((player) => {
+          const row = document.createElement("div");
+          row.className = "table-row";
+
+          const nameCell = document.createElement("div");
+          nameCell.className = "default table-data";
+          nameCell.innerHTML = `<strong>${player}</strong>`;
+          row.appendChild(nameCell);
+
+          for (let i = 0; i < 6; i++) {
+            const dataCell = document.createElement("div");
+            dataCell.className = "table-data";
+            dataCell.textContent = "";
+            row.appendChild(dataCell);
           }
-        }
-      });
-    });
+
+          tableContent.appendChild(row);
+        });
+
+        tableContent = document.querySelector(".attack");
+
+        Players.forEach((player) => {
+          const row = document.createElement("div");
+          row.className = "table-row";
+
+          const nameCell = document.createElement("div");
+          nameCell.className = "default table-data";
+          nameCell.innerHTML = `<strong>${player}</strong>`;
+          row.appendChild(nameCell);
+
+          for (let i = 0; i < 5; i++) {
+            const dataCell = document.createElement("div");
+            dataCell.className = "table-data";
+            dataCell.textContent = "";
+            row.appendChild(dataCell);
+          }
+
+          tableContent.appendChild(row);
+        });
+
+        document.querySelectorAll(".table-data:not(.default)").forEach((item) => {
+          item.addEventListener("click", (event) => {
+            if (event.altKey) {
+              nextDataToShowInCell = Math.max(0, parseInt(item.innerHTML) - 1);
+              if (nextDataToShowInCell) {
+                item.innerHTML = nextDataToShowInCell;
+              } else {
+                item.innerHTML = nextDataToShowInCell = "";
+              }
+            } else {
+              nextDataToShowInCell = parseInt(item.innerHTML) + 1;
+              if (nextDataToShowInCell) {
+                item.innerHTML = nextDataToShowInCell;
+              } else {
+                item.innerHTML = nextDataToShowInCell = 1;
+              }
+            }
+          });
+        });
   </script>
 </html>
